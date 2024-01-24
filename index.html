@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sua Página</title>
+  </head>
+  <body>
+    <iframe
+      src="https://br.widgets.investing.com/live-currency-cross-rates?theme=darkTheme&cols=bid,ask,time&pairs=2103"
+      width="100%"
+      height="600"
+      frameborder="0"
+      allowtransparency="true"
+      marginwidth="0"
+      marginheight="0"
+    ></iframe>
+    <div
+      class="poweredBy"
+      style="font-family: Arial, Helvetica, sans-serif"
+    ></div>
+
+    <h2>Calculadora USDT</h2>
+    <p>USD Spot (Investing): <span id="usdSpotValue">Carregando...</span></p>
+    <p>Taxa: $1</p>
+    <hr />
+    <b>USDT Preço: <span id="usdtPrice">Carregando...</span></b>
+
+    <script>
+      function fetchAPI() {
+        fetch(
+          "https://cors-everywhere.onrender.com/https://api.hgbrasil.com/finance?key=c60e30cf"
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            // Atualizar os valores na página
+            document.getElementById("usdSpotValue").textContent =
+              data.results.currencies.USD.buy.toFixed(2);
+            document.getElementById("usdtPrice").textContent =
+              data.results.currencies.USD.sell.toFixed(2);
+          })
+          .catch((error) => {
+            console.error("Erro ao obter dados da API:", error);
+          });
+      }
+
+      function obterTaxaDaURL() {
+        // Extrai o parâmetro 'taxa' da URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var taxa = urlParams.get("taxa");
+
+        // Se 'taxa' não estiver presente na URL, use um valor padrão
+        return taxa ? parseFloat(taxa.replace(",", ".")) : 1.0; // Valor padrão é 1.0
+      }
+
+      window.onload = fetchAPI;
+    </script>
+  </body>
+</html>
