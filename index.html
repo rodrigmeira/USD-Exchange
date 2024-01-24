@@ -36,7 +36,7 @@
           .then((response) => response.json())
           .then((data) => {
             // Atualizar os valores na página multiplicando pela taxa e adicionando duas casas decimais
-            var usdSpotValue = (data.results.currencies.USD.buy * taxa).toFixed(
+            var usdSpotValue = (data.results.currencies.USD.sell * taxa).toFixed(
               4
             );
             var usdtPrice = (data.results.currencies.USD.sell * taxa).toFixed(
