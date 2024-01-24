@@ -22,22 +22,25 @@
 
     <h2>Calculadora USDT</h2>
     <p>USD Spot (Investing): <span id="usdSpotValue">Carregando...</span></p>
-    <p>Taxa: $1</p>
+    <p>Taxa: $<span id="taxa">1</span></p>
     <hr />
     <b>USDT Preço: <span id="usdtPrice">Carregando...</span></b>
 
     <script>
       function fetchAPI() {
+        var taxa = obterTaxaDaURL();
+
         fetch(
           "https://cors-everywhere.onrender.com/https://api.hgbrasil.com/finance?key=c60e30cf"
         )
           .then((response) => response.json())
           .then((data) => {
-            // Atualizar os valores na página
-            document.getElementById("usdSpotValue").textContent =
-              data.results.currencies.USD.buy.toFixed(2);
-            document.getElementById("usdtPrice").textContent =
-              data.results.currencies.USD.sell.toFixed(2);
+            var usdSpotValue = (data.results.currencies.USD.buy * taxa).toFixed(2);
+            var usdtPrice = (data.results.currencies.USD.sell * taxa).toFixed(2);
+
+            document.getElementById("usdSpotValue").textContent = usdSpotValue;
+            document.getElementById("usdtPrice").textContent = usdtPrice;
+            document.getElementById("taxa").textContent = taxa.toFixed(2);
           })
           .catch((error) => {
             console.error("Erro ao obter dados da API:", error);
@@ -45,12 +48,10 @@
       }
 
       function obterTaxaDaURL() {
-        // Extrai o parâmetro 'taxa' da URL
         var urlParams = new URLSearchParams(window.location.search);
         var taxa = urlParams.get("taxa");
 
-        // Se 'taxa' não estiver presente na URL, use um valor padrão
-        return taxa ? parseFloat(taxa.replace(",", ".")) : 1.0; // Valor padrão é 1.0
+        return taxa ? parseFloat(taxa.replace(",", ".")) : 1.0;
       }
 
       window.onload = fetchAPI;
